@@ -1,0 +1,63 @@
+
+
+apply plugin: 'java'
+apply plugin: 'maven'
+
+
+//apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/configurations-exclude-jcl-log4j.gradle'
+//apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/jar-api.gradle'
+//apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/javadoc.gradle'
+apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/compilejava-lint.gradle'
+
+apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/checkstyle.gradle'
+apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/findbugs.gradle'
+
+dependencies {
+  compile "com.fasterxml.jackson.core:jackson-databind:${depVersionJackson}"
+  compile "com.google.guava:guava:${depVersionGuava}"
+  compile "com.tkmtwo:tkmtwo-common:${depVersionTkmTwoCommon}"
+  compile "joda-time:joda-time:${depVersionJodaTime}"
+  compile "org.mybatis:mybatis:${depVersionMybatis}"
+  compile "org.slf4j:slf4j-api:${depVersionSlf4J}"
+  compile "org.springframework:spring-context:${depVersionSpringFramework}"
+
+  runtime "ch.qos.logback:logback-classic:${depVersionLogback}"
+  runtime "ch.qos.logback:logback-core:${depVersionLogback}"
+  runtime "org.slf4j:jcl-over-slf4j:${depVersionSlf4J}"
+  runtime "org.slf4j:jul-to-slf4j:${depVersionSlf4J}"
+  runtime "org.slf4j:log4j-over-slf4j:${depVersionSlf4J}"
+
+  testCompile "junit:junit:${depVersionJunit}"
+  testCompile "org.mockito:mockito-core:${depVersionMockito}"
+  
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      //repository(url: "file://$buildDir/repo")
+      repository(url: "file://$rootDir/../tkmtwo-mvn-repo/release")
+    }
+  }
+}
+
+
+configurations {
+  all*.exclude module: 'commons-logging'
+  all*.exclude module: 'log4j'
+}
+
+jar {
+  baseName = rootProject.name
+  //appendix = project.name
+}
+
+javadoc { 
+  options.author = true
+  //options.header = rootProject.name + '-' + project.name
+  options.header = rootProject.name
+  options.links(project.ext.javadocLinks)
+  //title = rootProject.name + '-' + project.name
+  title = rootProject.name
+}
+
