@@ -4,14 +4,6 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 
-//apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/configurations-exclude-jcl-log4j.gradle'
-//apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/jar-api.gradle'
-//apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/javadoc.gradle'
-apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/compilejava-lint.gradle'
-
-apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/checkstyle.gradle'
-apply from: 'https://raw.github.com/tkmtwo/tkmtwo-build/master/gradle/findbugs.gradle'
-
 dependencies {
   compile "com.fasterxml.jackson.core:jackson-databind:${depVersionJackson}"
   compile "com.google.guava:guava:${depVersionGuava}"
