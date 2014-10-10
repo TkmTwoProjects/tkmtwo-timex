@@ -25,7 +25,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer;
-import com.tkmtwo.timex.DateTimes;
+import com.tkmtwo.timex.convert.IsoDateTimeConverter;
 import java.io.IOException;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
@@ -38,26 +38,10 @@ public final class DateTimeDeserializer
   extends StdScalarDeserializer<DateTime> {
   
   private static final long serialVersionUID = 1L;
-  private transient DateTimeFormatter dateTimeFormatter = DateTimes.getExtendedFormatter();
+  private transient IsoDateTimeConverter idtConverter = new IsoDateTimeConverter();
 
   public DateTimeDeserializer() { super(DateTime.class); }
-  public DateTimeDeserializer(DateTimeFormatter dtf) {
-    super(DateTime.class);
-    dateTimeFormatter = dtf;
-  }
   
-  public DateTimeFormatter getDateTimeFormatter() {
-    if (dateTimeFormatter == null) {
-      dateTimeFormatter = DateTimes.getExtendedFormatter();
-    }
-    
-    return dateTimeFormatter;
-  }
-  public void setDateTimeFormatter(DateTimeFormatter dtf) {
-    dateTimeFormatter = dtf;
-  }
-
-
   public DateTime deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
     throws IOException, JsonProcessingException {
     if (jsonParser.getCurrentToken() == JsonToken.VALUE_STRING) {
@@ -65,7 +49,7 @@ public final class DateTimeDeserializer
       if (isBlank(dtText)) { return null; }
 
       //return getDateTimeFormatter().parseDateTime(jsonParser.getText());
-      return getDateTimeFormatter().parseDateTime(dtText);
+      return idtConverter.convert(dtText);
     }
     
     throw deserializationContext.mappingException("Expected JSON Text");

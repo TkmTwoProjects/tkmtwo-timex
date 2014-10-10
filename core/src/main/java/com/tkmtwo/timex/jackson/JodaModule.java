@@ -19,9 +19,9 @@
 package com.tkmtwo.timex.jackson;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.tkmtwo.timex.DateTimes;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 
 /**
@@ -33,11 +33,11 @@ public final class JodaModule
   private static final long serialVersionUID = 1L;
 
   public JodaModule() {
-    this(DateTimes.getExtendedFormatter());
+    this(ISODateTimeFormat.dateTime());
   }
   
   public JodaModule(DateTimeFormatter dtf) {
-    addDeserializer(DateTime.class, new DateTimeDeserializer(dtf));
+    addDeserializer(DateTime.class, new DateTimeDeserializer());
     addSerializer(DateTime.class, new DateTimeSerializer(dtf));
   }
   

@@ -23,10 +23,10 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer;
-import com.tkmtwo.timex.DateTimes;
 import java.io.IOException;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 
 /**
@@ -35,7 +35,7 @@ import org.joda.time.format.DateTimeFormatter;
 public final class DateTimeSerializer
   extends StdScalarSerializer<DateTime> {
   
-  private DateTimeFormatter dateTimeFormatter = DateTimes.getExtendedFormatter();
+  private DateTimeFormatter dateTimeFormatter = ISODateTimeFormat.dateTime();
 
   public DateTimeSerializer() { super(DateTime.class); }
   public DateTimeSerializer(DateTimeFormatter dtf) {
@@ -45,7 +45,7 @@ public final class DateTimeSerializer
   
   public DateTimeFormatter getDateTimeFormatter() {
     if (dateTimeFormatter == null) {
-      dateTimeFormatter = DateTimes.getExtendedFormatter();
+      dateTimeFormatter = ISODateTimeFormat.dateTime();
     }
     
     return dateTimeFormatter;

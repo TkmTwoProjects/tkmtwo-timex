@@ -19,8 +19,8 @@
 package com.tkmtwo.timex.jackson;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tkmtwo.timex.DateTimes;
 import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 
 /**
@@ -32,7 +32,7 @@ public final class JodaMapper
   private static final long serialVersionUID = 1L;
   
   public JodaMapper() {
-    this(DateTimes.getExtendedFormatter());
+    this(ISODateTimeFormat.dateTime());
   }
   public JodaMapper(DateTimeFormatter dtf) {
     registerModule(new JodaModule(dtf));
