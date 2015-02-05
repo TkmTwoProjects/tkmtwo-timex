@@ -98,6 +98,12 @@ public class IntervalsTest
     assertTrue(new Interval(dtf.parseDateTime("1970-01-01T00:03:00Z"),
                             dtf.parseDateTime("1970-01-01T00:04:00Z")).isEqual(intervals.get(3)));
   }
+  private void verifyIntervalsForwardSingle(List<Interval> intervals)
+  {
+    assertEquals(1, intervals.size());
+    assertTrue(new Interval(dtf.parseDateTime("1970-01-01T00:00:00Z"),
+                            dtf.parseDateTime("1970-01-01T00:01:00Z")).isEqual(intervals.get(0)));
+  }
   private void verifyIntervalsReverse(List<Interval> intervals)
   {
     assertEquals(4, intervals.size());
@@ -109,6 +115,12 @@ public class IntervalsTest
                             dtf.parseDateTime("1970-01-01T00:03:00Z")).isEqual(intervals.get(1)));
     assertTrue(new Interval(dtf.parseDateTime("1970-01-01T00:03:00Z"),
                             dtf.parseDateTime("1970-01-01T00:04:00Z")).isEqual(intervals.get(0)));
+  }
+  private void verifyIntervalsReverseSingle(List<Interval> intervals)
+  {
+    assertEquals(1, intervals.size());
+    assertTrue(new Interval(dtf.parseDateTime("1970-01-01T00:00:00Z"),
+                            dtf.parseDateTime("1970-01-01T00:01:00Z")).isEqual(intervals.get(0)));
   }
 
 
@@ -146,6 +158,39 @@ public class IntervalsTest
                                                Periods.parse("PT1M")));
   }
 
+  @Test
+  public void testIntervalsForwardByIntervalSingle()
+  {
+    DateTimeDirection dtDirection = DateTimeDirection.FORWARD;
+    Interval interval = new Interval(new DateTime(0L),
+                                     new DateTime(60000L));
+    long duraLong = 60000L;
+    
+    
+    verifyIntervalsForwardSingle(Intervals.intervals(dtDirection,
+                                                     interval,
+                                                     duraLong));
+    verifyIntervalsForwardSingle(Intervals.intervals(dtDirection,
+                                                     interval,
+                                                     new Duration(duraLong)));
+    verifyIntervalsForwardSingle(Intervals.intervals(dtDirection,
+                                                     interval,
+                                                     new Period(duraLong)));
+    verifyIntervalsForwardSingle(Intervals.intervals(dtDirection,
+                                                     interval,
+                                                     Periods.parse("PT1M")));
+    
+    
+    verifyIntervalsForwardSingle(Intervals.intervals(interval,
+                                                     duraLong));
+    verifyIntervalsForwardSingle(Intervals.intervals(interval,
+                                                     new Duration(duraLong)));
+    verifyIntervalsForwardSingle(Intervals.intervals(interval,
+                                                     new Period(duraLong)));
+    verifyIntervalsForwardSingle(Intervals.intervals(interval,
+                                                     Periods.parse("PT1M")));
+  }
+
 
 
 
@@ -170,6 +215,30 @@ public class IntervalsTest
     verifyIntervalsReverse(Intervals.intervals(dtDirection,
                                                interval,
                                                Periods.parse("PT1M")));
+  }
+  
+  
+  @Test
+  public void testIntervalsReverseByIntervalSingle()
+  {
+    DateTimeDirection dtDirection = DateTimeDirection.REVERSE;
+    Interval interval = new Interval(new DateTime(0L),
+                                     new DateTime(60000L));
+    long duraLong = 60000L;
+    
+    
+    verifyIntervalsReverseSingle(Intervals.intervals(dtDirection,
+                                                     interval,
+                                                     duraLong));
+    verifyIntervalsReverseSingle(Intervals.intervals(dtDirection,
+                                                     interval,
+                                                     new Duration(duraLong)));
+    verifyIntervalsReverseSingle(Intervals.intervals(dtDirection,
+                                                     interval,
+                                                     new Period(duraLong)));
+    verifyIntervalsReverseSingle(Intervals.intervals(dtDirection,
+                                                     interval,
+                                                     Periods.parse("PT1M")));
   }
 
 

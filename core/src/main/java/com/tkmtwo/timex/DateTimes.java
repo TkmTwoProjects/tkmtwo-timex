@@ -481,8 +481,8 @@ public final class DateTimes {
     checkNotNull(dtDirection, "Need a direction.");
     checkNotNull(interval, "Need an interval.");
     checkArgument(duraMillis != 0L, "DuraMillis can not be zero.");
-    checkArgument(interval.toDurationMillis() > duraMillis,
-                  "Interval must be greater than the DuraMillis.");
+    checkArgument(interval.toDurationMillis() >= duraMillis,
+                  "Interval must be greater than or equal to the DuraMillis.");
 
     List<DateTime> dts = new ArrayList<DateTime>();
 
