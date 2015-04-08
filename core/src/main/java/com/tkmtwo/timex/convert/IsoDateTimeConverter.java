@@ -62,9 +62,9 @@ public final class IsoDateTimeConverter
   private static final CharMatcher ASCII_DIGITS =
     CharMatcher.inRange('0', '9');
   private static final CharMatcher DATE_TIME_SEPARATOR =
-    CharMatcher.anyOf("T");
+    CharMatcher.anyOf("T ");
   
-
+  
   @Override
   public DateTime convert(String s) {
     String ts = blankToNull(s);
@@ -72,23 +72,49 @@ public final class IsoDateTimeConverter
     
     int tsLength = ts.length();
     
-    if (tsLength == 24 && DATE_TIME_SEPARATOR.matches(ts.charAt(10))) {
-      //ISO Extended with millis
-      return ISODateTimeFormat.dateTime().parseDateTime(ts);
-    } else if (tsLength == 20 && DATE_TIME_SEPARATOR.matches(ts.charAt(10))) {
-      //ISO Extended without millis
-      return ISODateTimeFormat.dateTimeNoMillis().parseDateTime(ts);
-    } else if (tsLength == 20 && DATE_TIME_SEPARATOR.matches(ts.charAt(8))) {
-      //ISO Basic with millis
-      return ISODateTimeFormat.basicDateTime().parseDateTime(ts);
-    } else if (tsLength == 16 && DATE_TIME_SEPARATOR.matches(ts.charAt(8))) {
-      //ISO Basic without millis
-      return ISODateTimeFormat.basicDateTimeNoMillis().parseDateTime(ts);
+    if (tsLength >= 23 && DATE_TIME_SEPARATOR.matches(ts.charAt(10))) {
+      
+      //ISO Extended with millis yyyy-MM-ddTHH:mm:ss.SSSZ
+      return ISODateTimeFormat.dateTime().parseDateTime(ensureTeeAndZee(ts, 10));
+      
+    } else if (tsLength >= 19 && DATE_TIME_SEPARATOR.matches(ts.charAt(10))) {
+      
+      //ISO Extended without millis yyyy-MM-ddTHH:mm:ssZ
+      return ISODateTimeFormat.dateTimeNoMillis().parseDateTime(ensureTeeAndZee(ts, 10));
+      
+    } else if (tsLength >= 19 && DATE_TIME_SEPARATOR.matches(ts.charAt(8))) {
+      
+      //ISO Basic with millis yyyyMMddTHHmmss.SSSZ
+      return ISODateTimeFormat.basicDateTime().parseDateTime(ensureTeeAndZee(ts, 8));
+      
+    } else if (tsLength >= 15 && DATE_TIME_SEPARATOR.matches(ts.charAt(8))) {
+      
+      //ISO Basic without millis yyyyMMddTHHmmssZ
+      return ISODateTimeFormat.basicDateTimeNoMillis().parseDateTime(ensureTeeAndZee(ts, 8));
+      
     } else if (ASCII_DIGITS.matchesAllOf(ts)) {
+      
       return new DateTime(Long.parseLong(ts));
+      
     }
     
-    throw new IllegalArgumentException(String.format("Input string %s can not be converted.", s));
+    throw new IllegalArgumentException(String.format("Input string '%s' can not be converted to a DateTime.", s));
   }
+  
+
+  //caveat emptor...no error checking here
+  //ensure we have a T separator where we expect it, and assume timezone "Z" 
+  private String ensureTeeAndZee(String s, int tpos) {
+    String rs = s;
+    if (rs.charAt(tpos) != 'T') {
+      rs = rs.substring(0, tpos) + 'T' + rs.substring(tpos + 1);
+    }
+    
+    if (ASCII_DIGITS.matches(rs.charAt(rs.length() - 1))) {
+      return rs + "Z";
+    }
+    return rs;
+  }
+  
   
 }
